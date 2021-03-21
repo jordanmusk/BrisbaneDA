@@ -6,7 +6,7 @@ require 'mechanize'
 require 'date'
 
 def scrape_page(page)
-  page.at_xpath("//table").search("tr").each do |tr|
+  page.at("//table").search("tr").each do |tr|
     begin
       tds = tr.search('td').map{|t| t.inner_text.gsub("\r\n", "").strip}
       day, month, year = tds[3].split("/").map{|s| s.to_i}
