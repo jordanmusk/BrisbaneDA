@@ -52,7 +52,7 @@ def click(page, doc)
   end
 end
 
-years = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007]
+years = [2025, 2024, 2023, 2022, 2021, 2020]
 periodstrs = years.map(&:to_s).product([*'-01'..'-12'].reverse).map(&:join).select{|d| d <= Date.today.to_s[0..-3]}.reverse
 
 url_ends = ['&4=DA_PA_SC_MCU&4a=DA_PA_SC_MCU', '&4=DA_PA_SW_BW&4a=DA_PA_SW_BW', '&4=DA_SPA_SC_MCU_CP&4a=DA_SPA_SC_MCU_CP', '&4=DA_SPA_SW_BLDNG_WORK&4a=DA_SPA_SW_BLDNG_WORK', '&4=DA_MC_MCU_CP&4a=DA_MC_MCU_CP', '&4=DA_BW_BLDNG_WORK&4a=DA_BW_BLDNG_WORK']
@@ -71,12 +71,6 @@ url_ends.each {|url_end|
     agent = Mechanize.new
 
     # Read in a page
-    page = agent.get(url)
-
-    form = page.forms.first
-    button = form.button_with(value: "I Agree")
-    form.submit(button)
-    # It doesn't even redirect to the correct place. Ugh
     page = agent.get(url)
 
     current_page_no = 1
