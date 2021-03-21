@@ -55,37 +55,33 @@ end
 years = [2025, 2024, 2023, 2022, 2021, 2020]
 periodstrs = years.map(&:to_s).product([*'-01'..'-12'].reverse).map(&:join).select{|d| d <= Date.today.to_s[0..-3]}.reverse
 
-url_ends = ['&4=DA_PA_SC_MCU&4a=DA_PA_SC_MCU', '&4=DA_PA_SW_BW&4a=DA_PA_SW_BW', '&4=DA_SPA_SC_MCU_CP&4a=DA_SPA_SC_MCU_CP', '&4=DA_SPA_SW_BLDNG_WORK&4a=DA_SPA_SW_BLDNG_WORK', '&4=DA_MC_MCU_CP&4a=DA_MC_MCU_CP', '&4=DA_BW_BLDNG_WORK&4a=DA_BW_BLDNG_WORK']
+periodstrs.each {|periodstr| 
 
-url_ends.each {|url_end|
-  periodstrs.each {|periodstr| 
+  matches = periodstr.scan(/^([0-9]{4})-(0[1-9]|1[0-2])$/)
+  period = "&1=" + Date.new(matches[0][0].to_i, matches[0][1].to_i, 1).strftime("%d/%m/%Y")
+  period = period + "&2=" + Date.new(matches[0][0].to_i, matches[0][1].to_i, -1).strftime("%d/%m/%Y")
 
-    matches = periodstr.scan(/^([0-9]{4})-(0[1-9]|1[0-2])$/)
-    period = "&1=" + Date.new(matches[0][0].to_i, matches[0][1].to_i, 1).strftime("%d/%m/%Y")
-    period = period + "&2=" + Date.new(matches[0][0].to_i, matches[0][1].to_i, -1).strftime("%d/%m/%Y")
+  puts "Getting data in `" + periodstr + "`."
 
-    puts "Getting data in `" + periodstr + "`."
+  url = "https://pdonline.brisbane.qld.gov.au/MasterViewUI/Modules/ApplicationMaster/default.aspx?page=found" + period
 
-    url = "https://pdonline.brisbane.qld.gov.au/MasterViewUI/Modules/ApplicationMaster/default.aspx?page=found" + period + url_end
+  agent = Mechanize.new
 
-    agent = Mechanize.new
+  # Read in a page
+  page = agent.get(url)
 
-    # Read in a page
-    page = agent.get(url)
+  current_page_no = 1
+  next_page_link = true
 
-    current_page_no = 1
-    next_page_link = true
-
-    while next_page_link
-      if (current_page_no%5) == 0
-        puts "Scraping page #{current_page_no}..."
-      end
-      scrape_page(page)
-
-      current_page_no += 1
-      next_page_link = page.at(".rgPageNext")
-      page = click(page, next_page_link)
-      next_page_link = nil if page.nil?
+  while next_page_link
+    if (current_page_no%5) == 0
+      puts "Scraping page #{current_page_no}..."
     end
-    }
+    scrape_page(page)
+
+    current_page_no += 1
+    next_page_link = page.at(".rgPageNext")
+    page = click(page, next_page_link)
+    next_page_link = nil if page.nil?
+  end
   }
