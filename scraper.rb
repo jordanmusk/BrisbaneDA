@@ -1,7 +1,7 @@
 require 'scraperwiki'
 require 'faraday'
 require 'date'
-
+require 'json'
 
 url = 'https://developmenti.brisbane.qld.gov.au/Geo/GetApplicationFilterResults'
 
