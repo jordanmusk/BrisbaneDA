@@ -7,7 +7,7 @@ url = 'https://developmenti.brisbane.qld.gov.au/Geo/GetApplicationFilterResults'
 
 resp = Faraday.post(url) do |req|
     req.headers['Content-Type'] = 'application/json'
-    req.body = '{"Progress":"all","StartDateUnixEpochNumber":0,"EndDateUnixEpochNumber":'+Date.today',"DateRangeField":"submitted","DateRangeDescriptor":"Custom","MaxRecords":1000,"SortField":"submitted","PixelWidth":800,"PixelHeight":800}'
+    req.body = '{"Progress":"all","StartDateUnixEpochNumber":0,"EndDateUnixEpochNumber":'+Date.today.to_time.to_i.to_s + '000,"DateRangeField":"submitted","DateRangeDescriptor":"Custom","MaxRecords":1000,"SortField":"submitted","PixelWidth":800,"PixelHeight":800}'
 end
 raw = JSON.parse(resp.body)
 
