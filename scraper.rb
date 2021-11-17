@@ -17,6 +17,7 @@ raw['features'][1..-1].each do |set|
 	record['council_reference'] = set['application_number']
 	record['address'] = set['description'].split(" - ")[0]
 	record['description'] = set['description'].split(" - ")[1..-1].join(" - ")
+	record['uses'] = set['use']
 	record['date_received'] = set['date_received']
 	record['date_scraped'] = Date.today.to_s
 	puts "Saving #{record['council_reference']}, #{record['address']}"
